@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+
+if ! [ -x "$(command -v ansible)" ]; then
+  sudo pacman -S --noconfirm ansible
+  ansible-galaxy collection install community.general
+fi
+
+ansible-playbook bootstrap.yml --ask-become-pass
+
+notify-send "dotfiles: Bootstrap complete" "Successfully set up dev environment."
