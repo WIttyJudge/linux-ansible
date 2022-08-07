@@ -1,33 +1,47 @@
-- name: Bootstrap development environment
+---
+- name: Playbook to manage my dotfiles (https://github.com/wittyjudge/dotfiles)
   hosts: localhost
-
   tasks:
-    # - name: Run the equivalent of "pacman -Syu" as a separate step
-    #   community.general.pacman:
-    #     update_cache: yes
-    #     upgrade: yes
-    #   become: yes
+    - name: load custom vars
+      include_vars: ./vars.yml
+      tags:
+        - always
 
-    # - name: Delete zoxide
-    #   community.general.pacman:
-    #     name: zoxide
-    #     state: absent
-    #     force: yes
-    #   become: yes
+    - name: Install dotfiles repository
+      git:
+        repo: "{{ dotfiles_git_src }}"
+        dest: "{{ dotfiles_git_dest }}"
 
-    # Read a CSV file and access the first item
-    - name: Read users from CSV file and return a list
-      community.general.read_csv:
-        path: packages.csv
-      register: users
-      delegate_to: localhost
+    - name: Install suckless tools repository
+      git:
+        repo: "{{ suckless_tools_git_src }}"
+        dest: "{{ suckless_tools_git_dest }}"
+        force: yes
 
-    # - ansible.builtin.debug:
-    #     msg: "User {{ users.list.1.TAG }}"
-
-    - name: Install packages
-      community.general.pacman:
-        name: "{{ users.list.1.PROGRAM }}"
-        state: present
+    - name: Build and install suckless tools
+      make:
+        target: install
+        chdir: "/home/{{ ansible_user_id }}/suckless-tools1/{{ item }}"
+        make: /usr/bin/make
+      loop:
+        - dmenu
+        - dwm
+        - dwmblocks
+        - slock
       become: yes
+
+    - include: tasks/arch.yml
+      when: ansible_os_family == "Archlinux"
+      tags:
+        - arch
+
+    # - name: Configure pacman
+    #   lineinfile:
+    #     path: /etc/pacman.conf
+    #     line: "{{ item.line }}"
+    #     regexp: "{{ item.regexp }}"
+    #     backrefs: "{{ item.backrefs }}"
+    #   loop:
+    #     - { line: "Color", regexp: "#Color", backrefs: true}
+    #     - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: true}
 

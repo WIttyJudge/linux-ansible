@@ -1,0 +1,30 @@
+---
+- block:
+  - name: Configure pacman
+    lineinfile:
+      path: ./test/pacman.conf
+      # path: /etc/pacman.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      backrefs: "{{ item.backrefs }}"
+    loop:
+      - { line: "Color", regexp: "#Color", backrefs: true }
+      - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: true }
+
+  - name: Enable pacman repositories
+    ini_file:
+      path: ./test/pacman.conf
+      section: "{{ item.section }}"
+      option: "{{ item.option }}"
+      value: "{{ item.value | default(omit) }}"
+    loop:
+      - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
+
+  become: true
+
+  # - name: Sudoers file
+  #   lineinfile:
+  #     path: ./test/file.txt
+  #     regexp: '^%ADMIN ALL='
+  #     line: '%ADMIN ALL=(ALL) NOPASSWD: ALL'
+  #     validate: /usr/sbin/visudo -cf %s
