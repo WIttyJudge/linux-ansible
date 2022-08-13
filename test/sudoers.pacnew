@@ -98,4 +98,3 @@ root ALL=(ALL:ALL) ALL
 
 ## Read drop-in files from /etc/sudoers.d
 @includedir /etc/sudoers.d
-%wheel ALL=(ALL:ALL) NOPASSWD: ALL

@@ -1,0 +1,12 @@
+- name: Create folders
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ user_home_path }}/.local/bin"
+    - "{{ user_home_path }}/.local/share/applications"
+    - "{{ user_home_path }}/.local/share/icons/fontawesome"
+    - "{{ user_home_path }}/.cache/zsh"
+    - "{{ user_home_path }}/projects/golang/src"
+    - "{{ user_home_path }}/Pictures/screenshots"
+  become: true

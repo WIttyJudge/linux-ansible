@@ -1,0 +1,6 @@
+- name: Install dotfiles repository
+  git:
+    repo: "{{ dotfiles_git_src }}"
+    dest: "{{ dotfiles_git_dest }}"
+    update: no
+  become: yes

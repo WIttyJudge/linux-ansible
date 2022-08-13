@@ -1,0 +1,42 @@
+- name: Configure pacman
+  lineinfile:
+    path: ./test/pacman.conf
+    # path: /etc/pacman.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backrefs: "{{ item.backrefs }}"
+    state: present
+  loop:
+    - { line: "Color", regexp: "#Color", backrefs: yes }
+    - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: yes }
+
+- name: Enable pacman repositories
+  ini_file:
+    path: ./test/pacman.conf
+    # path: /etc/pacman.conf
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value | default(omit) }}"
+    state: present
+  loop:
+    - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
+  become: yes
+
+- name: Synchronizing package databases...
+  pacman:
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Refreshing Keyring
+  pacman:
+    name: archlinux-keyring
+    state: latest
+  become: yes
+  when: ansible_service_mgr == 'systemd'
+
+# https://stackoverflow.com/questions/39394333/how-can-i-tell-which-init-system-ansible-runs-when-i-use-the-service-module
+# Specify in which ini system we run script.
+# Systemd or runit, for example.
+# 
+# 

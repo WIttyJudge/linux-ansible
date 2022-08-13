@@ -1,47 +1,25 @@
----
+#!/usr/bin/env ansible-playbook
+
 - name: Playbook to manage my dotfiles (https://github.com/wittyjudge/dotfiles)
-  hosts: localhost
-  tasks:
-    - name: load custom vars
-      include_vars: ./vars.yml
+  hosts: local
+
+  vars_files:
+    - custom.yml
+
+  roles:
+    - role: system
       tags:
-        - always
+        - system
 
-    - name: Install dotfiles repository
-      git:
-        repo: "{{ dotfiles_git_src }}"
-        dest: "{{ dotfiles_git_dest }}"
-
-    - name: Install suckless tools repository
-      git:
-        repo: "{{ suckless_tools_git_src }}"
-        dest: "{{ suckless_tools_git_dest }}"
-        force: yes
-
-    - name: Build and install suckless tools
-      make:
-        target: install
-        chdir: "/home/{{ ansible_user_id }}/suckless-tools1/{{ item }}"
-        make: /usr/bin/make
-      loop:
-        - dmenu
-        - dwm
-        - dwmblocks
-        - slock
-      become: yes
-
-    - include: tasks/arch.yml
+    - role: arch_linux
       when: ansible_os_family == "Archlinux"
       tags:
-        - arch
+        - arch_linux
 
-    # - name: Configure pacman
-    #   lineinfile:
-    #     path: /etc/pacman.conf
-    #     line: "{{ item.line }}"
-    #     regexp: "{{ item.regexp }}"
-    #     backrefs: "{{ item.backrefs }}"
-    #   loop:
-    #     - { line: "Color", regexp: "#Color", backrefs: true}
-    #     - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: true}
+    - role: dotfiles 
+      tags:
+        - dotfiles
 
+    - role: suckless_tools 
+      tags:
+        - suckless_tools

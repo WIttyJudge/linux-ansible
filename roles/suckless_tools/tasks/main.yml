@@ -1,0 +1,17 @@
+- name: Install repository
+  git:
+    repo: "{{ suckless_tools_git_src }}"
+    dest: "{{ suckless_tools_git_dest }}"
+    update: no
+  become: yes
+
+- name: Build and install suckless tools
+  make:
+    target: install
+    chdir: "{{ suckless_tools_git_dest }}/{{ item }}"
+  loop:
+    - dmenu
+    - dwm
+    - dwmblocks
+    - slock
+  become: yes
