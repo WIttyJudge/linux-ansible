@@ -1,25 +1,37 @@
 #!/usr/bin/env ansible-playbook
 
-- name: Playbook to manage my dotfiles (https://github.com/wittyjudge/dotfiles)
+- name: Playbook to manage my operation system (Arch linux)
   hosts: local
 
   vars_files:
     - custom.yml
+    - secure.yml
 
   roles:
     - role: system
       tags:
         - system
 
-    - role: arch_linux
-      when: ansible_os_family == "Archlinux"
+    - role: yay 
       tags:
-        - arch_linux
+        - yay
+
+    - role: packages
+      tags:
+        - packages
 
     - role: dotfiles 
       tags:
         - dotfiles
 
-    - role: suckless_tools 
-      tags:
-        - suckless_tools
+    # - role: suckless_tools 
+    #   tags:
+    #     - suckless_tools
+
+    # - role: cimon-io.asdf
+    #   asdf_plugins:
+    #   - name: "ruby"
+    #     versions: ["2.6.3"]
+    #     global: "2.6.3"
+    #   asdf_dir: "{{ XDG_DATA_HOME }}/asdf"
+    #   asdf_user: "{{ username }}"

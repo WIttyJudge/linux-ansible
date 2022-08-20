@@ -1,0 +1,5 @@
+---
+- name: Start networkmanager
+  service:
+    name: NetworkManager
+    state: started 

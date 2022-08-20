@@ -3,40 +3,16 @@
 # Quit on error
 set -e
 
-echo "[i] Ask for sudo password"
-sudo -v
+# DEFINE VARIABLES
 
 tags="$1"
 work_directory=$(pwd)
 custom_file_path="$work_directory/custom.yml"
+secure_file_path="$work_directory/secure.yml"
 
 if [ -z $tags ]; then
   tags="all"
 fi
-
-case "$(uname -s)" in
-  Linux)
-    [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
-    [ ! -x "$(command -v ansible)" ] && ansible_not_installed=true
-
-    . /etc/os-release
-
-    case "$ID" in
-      arch)
-        if  [ $ansible_not_installed ]; then
-          echo "[i] Install Ansible"
-
-          sudo pacman -S --noconfirm ansible
-          ansible-galaxy install -r requirements.yaml
-        fi
-        ;;
-      *)
-        echo "[!] Unsupported Linux Distribution: $ID"
-        exit 1
-        ;;
-    esac
-    ;;
-esac
 
 welcome_message() {
   echo "Welcome to ansible setup"
@@ -62,7 +38,7 @@ get_username() {
 get_user_password() {
   echo
   echo "Enter your user password"
-  echo "This password will be used for login your user"
+  echo "[i] This password will be used for login your user"
   read -s -p "Password: " user_password
   echo
   read -s -p "Repeat password: " user_password2
@@ -74,19 +50,56 @@ get_user_password() {
     read -s -p "Password: " user_password
     echo
     read -s -p "Repeat password: " user_password2
+    echo
   done
 
   echo "user_password: \"${user_password}\"" >> $custom_file_path
 }
 
+# EXECUTION
+
+echo "[i] Ask for sudo password"
+sudo -v
+
+case "$(uname -s)" in
+  Linux)
+    [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
+    [ ! -x "$(command -v ansible)" ] && ansible_not_installed=true
+
+    . /etc/os-release
+
+    case "$ID" in
+      arch)
+        if  [ $ansible_not_installed ]; then
+          echo "[i] Install Ansible"
+
+          sudo pacman -S --noconfirm ansible
+          ansible-galaxy install -r requirements.yaml
+        fi
+        ;;
+      *)
+        echo "[!] Unsupported Linux Distribution: $ID"
+        exit 1
+        ;;
+    esac
+    ;;
+esac
+
 touch $custom_file_path
 # Clean already existed file
 cat /dev/null > $custom_file_path
+
+# Set secure permissions for the Vault file
+touch $secure_file_path
+chmod 600 $secure_file_path
 
 clear
 welcome_message
 get_username
 get_user_password
+
+# echo "[i] Encrypting the secure variables"
+# ansible-vault encrypt $secure_file_path
 
 echo "[i] Run Playbook"
 ansible-playbook bootstrap.yml --ask-become-pass --tags $tags 

@@ -1,4 +1,5 @@
-- name: Install repository
+---
+- name: Clone suckless tools repository
   git:
     repo: "{{ suckless_tools_git_src }}"
     dest: "{{ suckless_tools_git_dest }}"

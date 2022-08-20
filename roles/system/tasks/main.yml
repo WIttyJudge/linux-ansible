@@ -1,5 +1,9 @@
+---
 - name: Setup user related settings
   include_tasks: user.yml
 
 - include_tasks: folders.yml
 
+- name: Arch Linux specific tasks
+  include_tasks: archlinux.yml
+  when: ansible_os_family == "Archlinux"

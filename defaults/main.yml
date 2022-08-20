@@ -1,6 +1,0 @@
----
-dotfiles_git_src: https://github.com/wittyjudge/dotfiles.git
-dotfiles_git_dest: ~/dotfiles1
-
-suckless_tools_git_src: https://github.com/wittyjudge/suckless-tools.git
-suckless_tools_git_dest: ~/suckless-tools1

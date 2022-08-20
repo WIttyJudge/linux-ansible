@@ -1,6 +1,24 @@
-- name: Install dotfiles repository
+---
+- name: Clone dotfiles repository
   git:
     repo: "{{ dotfiles_git_src }}"
     dest: "{{ dotfiles_git_dest }}"
     update: no
   become: yes
+
+# - name: Chmod the user home directory
+#   file:
+#     path: "{{ dotfiles_git_dest }}"
+#     state: directory
+#     mode: 0755
+#     owner: "{{ username }}"
+#     group: "{{ username }}"
+#     recurse: yes
+#   become: yes
+
+# - name: Run a setup script
+#   shell:
+#     cmd: bash setup --noconfirm
+#     chdir: "{{ dotfiles_git_dest }}"
+#   become: yes
+#   become_user: "{{ username }}"

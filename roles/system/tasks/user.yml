@@ -1,22 +1,9 @@
+---
 - name: Make sure we have a 'wheel' group
   group:
     name: wheel
     state: present
   become: yes
-
-- name: Create User
-  user:
-    name: "{{ username }}"
-    password: "{{ user_password | string | password_hash('sha512') }}"
-    groups: wheel,users,input,docker
-    append: yes
-    state: present
-  become: yes
-  register: new_user
-
-- name: Set a fact with a newly created user
-  set_fact:
-    user_home_path: "{{ new_user.home }}"
 
 - name: Get stats of the sudoers.pacnew
   stat:
@@ -26,7 +13,9 @@
 - name: Copy sudoers.pacnew into sudoers
   copy:
     src: ./test/sudoers.pacnew
+    # src: /etc/sudoers.pacnew
     dest: ./test/sudoers
+    # dest: /etc/sudoers
     validate: visudo -cf %s
   become: yes
   when: sudoers_pacnew_file.stat.exists
@@ -40,3 +29,28 @@
     line: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL"
     validate: visudo -cf %s
   become: yes
+
+- name: Create {{ username }} user
+  user:
+    name: "{{ username }}"
+    password: "{{ user_password | string | password_hash('sha512') }}"
+    groups: wheel,users,input,docker
+    append: yes
+    state: present
+  become: yes
+  register: new_user
+
+- name: Set a fact with a newly created user
+  set_fact:
+    user_home_path: "{{ new_user.home }}"
+    XDG_DATA_HOME: "{{ new_user.home }}/.local/share"
+
+# - name: Chmod the user home directory
+#   file:
+#     path: "{{ user_home_path }}"
+#     state: directory
+#     mode: 0755
+#     owner: "{{ username }}"
+#     group: "{{ username }}"
+#     recurse: yes
+#   become: yes

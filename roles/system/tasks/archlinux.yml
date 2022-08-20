@@ -1,3 +1,4 @@
+---
 - name: Configure pacman
   lineinfile:
     path: ./test/pacman.conf
@@ -21,22 +22,3 @@
   loop:
     - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
   become: yes
-
-- name: Synchronizing package databases...
-  pacman:
-    update_cache: yes
-    state: present
-  become: yes
-
-- name: Refreshing Keyring
-  pacman:
-    name: archlinux-keyring
-    state: latest
-  become: yes
-  when: ansible_service_mgr == 'systemd'
-
-# https://stackoverflow.com/questions/39394333/how-can-i-tell-which-init-system-ansible-runs-when-i-use-the-service-module
-# Specify in which ini system we run script.
-# Systemd or runit, for example.
-# 
-# 
