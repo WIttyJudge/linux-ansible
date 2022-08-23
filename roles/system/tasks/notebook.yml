@@ -1,0 +1,6 @@
+- name: Enable tap to clic
+  copy:
+    mode: 0644
+    src: 40-libinput.conf
+    # dest: /etc/X11/xorg.conf.d/40-libinput.conf
+    dest: /home/wittyjudge/test.conf

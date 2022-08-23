@@ -8,8 +8,8 @@
     backrefs: "{{ item.backrefs }}"
     state: present
   loop:
-    - { line: "Color", regexp: "#Color", backrefs: yes }
-    - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: yes }
+    - { line: "Color", regexp: "^#?Color$", backrefs: yes }
+    - { line: "ILoveCandy", regexp: "^#?ILoveCandy$", backrefs: yes }
 
 - name: Enable pacman repositories
   ini_file:

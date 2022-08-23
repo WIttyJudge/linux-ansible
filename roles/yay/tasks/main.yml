@@ -1,7 +1,0 @@
----
-- name: Install yay
-  import_role:
-    name: makepkg
-  vars:
-    makepkg_packages:
-      - yay-bin
