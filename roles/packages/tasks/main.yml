@@ -1,73 +1,8 @@
 ---
-- block:
-  - name: Update/Upgrade pacman (pacman -Syu)
-    pacman:
-      update_cache: yes
-      # upgrade: yes
+- name: asdasdas
+  debug:
+    msg: 'test'
 
-  - name: Refresh Arch keyrings.
-    pacman:
-      name: archlinux-keyring
-      state: latest
-    when: ansible_service_mgr == 'systemd'
-
-  - name: Install reflector package
-    pacman:
-      name: reflector
-      state: latest
-
-  - name: Execute reflector package
-    shell: reflector --country 'Ukraine,Romania,Russia,Germany' --save /etc/pacman.d/mirrorlist
-
-  - name: Remove reflector packages 
-    pacman:
-      name: reflector
-      state: absent
-
-  - name: Install first needed packages
-    pacman:
-      name: 
-        - curl 
-        - git 
-        - base-devel
-      state: present
-
-  - name: Install Network Manager
-    pacman:
-      name: "networkmanager"
-      state: present
-    notify: 
-      - Start networkmanager 
-
-  - name: Install packages.csv file
-    get_url:
-      url: "{{ packages_csv_src }}"
-      dest: "{{ packages_csv_dest }}"
-      force: yes
-
-  - name: Read packages.csv file
-    read_csv:
-        path: "{{ packages_csv_dest }}"
-    register: packages
-
-  - name: Set facts with the packages list
-    set_fact:
-      pacman_packages: "{{ packages.list | selectattr('SKIP', 'equalto', '') | selectattr('TAG', 'equalto', '') | map(attribute='PROGRAM') | list }}"
-      aur_packages: "{{ packages.list | selectattr('SKIP', 'equalto', '') | selectattr('TAG', 'equalto', 'AUR') | map(attribute='PROGRAM') | list }}"
-
-  - name: Install pacman packages
-    pacman:
-      name: "{{ pacman_packages }}"
-      state: present
-    ignore_errors: yes
-
-  - name: Install AUR packages
-    import_role:
-      name: makepkg
-    vars:
-      makepkg_packages: "{{ aur_packages }}"
-    become: no
-
-  become: yes
+- name: Arch Linux specific tasks
+  include_tasks: archlinux.yml
   when: ansible_os_family == "Archlinux"
-  tags: pacman

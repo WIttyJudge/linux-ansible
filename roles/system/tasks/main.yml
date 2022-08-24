@@ -10,4 +10,4 @@
 
 - name: Specific tasks only for the notebook device.
   include_tasks: notebook.yml
-  when: ansible_form_factor == "Desktop"
+  when: ansible_form_factor == "Notebook"

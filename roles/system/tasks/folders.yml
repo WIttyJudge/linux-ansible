@@ -4,10 +4,10 @@
     path: "{{ item }}"
     state: directory
   loop:
-    # - "{{ user_home_path }}/.local/bin"
-    # - "{{ user_home_path }}/.local/share/applications"
-    # - "{{ user_home_path }}/.local/share/icons/fontawesome"
-    - "{{ user_home_path }}/.cache/zsh"
-    - "{{ user_home_path }}/projects/golang/src"
-    - "{{ user_home_path }}/Pictures/screenshots"
+    # - "{{ ansible_user_dir }}/.local/bin"
+    # - "{{ ansible_user_dir }}/.local/share/applications"
+    # - "{{ ansible_user_dir }}/.local/share/icons/fontawesome"
+    - "{{ ansible_user_dir }}/.cache/zsh"
+    - "{{ ansible_user_dir }}/projects/golang/src"
+    - "{{ ansible_user_dir }}/Pictures/screenshots"
   become: true

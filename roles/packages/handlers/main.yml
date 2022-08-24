@@ -1,5 +1,6 @@
 ---
 - name: Start networkmanager
-  service:
-    name: NetworkManager
-    state: started 
+  systemd:
+    name: NetworkManager.service
+    enabled: yes
+  become: yes

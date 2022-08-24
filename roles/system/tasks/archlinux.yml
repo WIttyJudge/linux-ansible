@@ -10,6 +10,7 @@
   loop:
     - { line: "Color", regexp: "^#?Color$", backrefs: yes }
     - { line: "ILoveCandy", regexp: "^#?ILoveCandy$", backrefs: yes }
+    - { line: "ParallelDownloads = 5", regexp: "#ParallelDownloads", backrefs: yes }
 
 - name: Enable pacman repositories
   ini_file:
