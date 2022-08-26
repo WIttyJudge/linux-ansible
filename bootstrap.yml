@@ -12,10 +12,6 @@
       tags:
         - system
 
-    - role: yay 
-      tags:
-        - yay
-
     - role: packages
       tags:
         - packages
@@ -24,14 +20,10 @@
       tags:
         - dotfiles
 
-    # - role: suckless_tools 
-    #   tags:
-    #     - suckless_tools
+    - role: suckless_tools 
+      tags:
+        - suckless_tools
 
-    # - role: cimon-io.asdf
-    #   asdf_plugins:
-    #   - name: "ruby"
-    #     versions: ["2.6.3"]
-    #     global: "2.6.3"
-    #   asdf_dir: "{{ XDG_DATA_HOME }}/asdf"
-    #   asdf_user: "{{ username }}"
+    - role: asdf
+      tags:
+        - asdf

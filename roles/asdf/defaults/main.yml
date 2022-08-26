@@ -1,0 +1,6 @@
+asdf_plugins:
+  - name: ruby
+    versions: ["2.6.3"]
+    global: "2.6.3"
+asdf_user: "{{ ansible_user_id }}"
+asdf_dir: "{{ ansible_user_dir }}/.local/share/asdf"
