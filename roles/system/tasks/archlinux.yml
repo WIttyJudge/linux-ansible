@@ -23,3 +23,10 @@
   loop:
     - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
   become: yes
+
+- name: Disable beep sound
+  shell: |
+    rmmod pcspkr
+    echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+  become: yes
+  ignore_errors: yes

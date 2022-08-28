@@ -45,13 +45,3 @@
     ansible_user_id: "{{ new_user.name }}"
     ansible_user_dir: "/home/{{ new_user.home }}"
     XDG_DATA_HOME: "{{ ansible_user_dir }}/.local/share"
-
-# - name: Chmod the user home directory
-#   file:
-#     path: "{{ ansible_user_dir }}"
-#     state: directory
-#     mode: 0755
-#     owner: "{{ username }}"
-#     group: "{{ username }}"
-#     recurse: yes
-#   become: yes

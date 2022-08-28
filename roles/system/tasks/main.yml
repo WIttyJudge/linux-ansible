@@ -1,6 +1,7 @@
 ---
 - name: Setup user related settings
   include_tasks: user.yml
+  when: create_new_user != False
 
 - include_tasks: folders.yml
 

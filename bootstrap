@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# A bash script that prepares the OS
+# before running the Ansible playbook
+
 # Quit on error
 set -e
 
@@ -8,7 +11,7 @@ set -e
 tags="$1"
 work_directory=$(pwd)
 custom_file_path="$work_directory/custom.yml"
-secure_file_path="$work_directory/secure.yml"
+secure_file_path="$work_directory/secret.yml"
 
 if [ -z $tags ]; then
   tags="all"
@@ -22,6 +25,22 @@ welcome_message() {
   echo "press [Ctrl+C] to quit this script"
 }
 
+create_new_user() {
+  echo
+  echo "Would you like to create a new user or use an nexisting one?"
+  read -p "Create a new user? [y/N]: " new_user
+  while ! [[ "$new_user" =~ ^[yYnN]*$ ]]; do
+    echo "[!] '$new_user' invalid selection"
+    read -p "Create a new user? [y/N]: " new_user
+  done
+
+  if [[ "$new_user" =~ ^[yY]*$ ]]; then
+    echo "create_new_user: true" >>$custom_file_path
+  else
+    echo "create_new_user: false" >>$custom_file_path
+  fi
+}
+
 get_username() {
   echo
   echo "Enter your desired username"
@@ -32,7 +51,7 @@ get_username() {
     read -p "Username: " username
   done
 
-  echo "username: \"${username}\"" >> $custom_file_path
+  echo "username: \"${username}\"" >>$custom_file_path
 }
 
 get_user_password() {
@@ -53,7 +72,7 @@ get_user_password() {
     echo
   done
 
-  echo "user_password: \"${user_password}\"" >> $custom_file_path
+  echo "user_password: \"${user_password}\"" >>$custom_file_path
 }
 
 # EXECUTION
@@ -62,32 +81,34 @@ echo "[i] Ask for sudo password"
 sudo -v
 
 case "$(uname -s)" in
-  Linux)
-    [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
-    [ ! -x "$(command -v ansible)" ] && ansible_not_installed=true
+Linux)
+  [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
+  [ ! -x "$(command -v ansible)" ] && ansible_not_installed=true
 
-    . /etc/os-release
+  . /etc/os-release
 
-    case "$ID" in
-      arch)
-        if  [ $ansible_not_installed ]; then
-          echo "[i] Install Ansible"
+  case "$ID" in
+  arch)
+    if [ $ansible_not_installed ]; then
+      echo "[i] Install Ansible"
 
-          sudo pacman -S --noconfirm ansible
-          ansible-galaxy install -r requirements.yaml
-        fi
-        ;;
-      *)
-        echo "[!] Unsupported Linux Distribution: $ID"
-        exit 1
-        ;;
-    esac
+      sudo pacman -S --noconfirm ansible
+      ansible-galaxy install -r requirements.yaml
+    fi
     ;;
+  *)
+    echo "[!] Unsupported Linux Distribution: $ID"
+    exit 1
+    ;;
+  esac
+  ;;
 esac
 
 touch $custom_file_path
+
 # Clean already existed file
-cat /dev/null > $custom_file_path
+cat /dev/null >$custom_file_path
+cat /dev/null >$secure_file_path
 
 # Set secure permissions for the Vault file
 touch $secure_file_path
@@ -95,15 +116,29 @@ chmod 600 $secure_file_path
 
 clear
 welcome_message
-get_username
-get_user_password
+create_new_user
+
+if [[ "$new_user" =~ ^[yY]*$ ]]; then
+  get_username
+  get_user_password
+fi
 
 # echo "[i] Encrypting the secure variables"
 # ansible-vault encrypt $secure_file_path
 
-echo "[i] Run Playbook"
-ansible-playbook bootstrap.yml --ask-become-pass --tags $tags 
 # --skip-tags arch_linux
 
-echo "[i] From now on you can use $ dotfiles to manage your dotfiles"
+echo
+echo "Success!"
+read -p "Would you like to run the playbook now? [y/N]: " launch_playbook
+while ! [[ "$launch_playbook" =~ ^[yYnN]*$ ]]; do
+  echo "$launch_playbook: invalid selection"
+  read -p "Run playbook now? [y/N]: " launch_playbook
+done
+
+if [[ "$launch_playbook" =~ ^[yY]$ ]]; then
+  echo "[i] Run Playbook"
+  ansible-playbook bootstrap.yml --ask-become-pass --tags $tags
+fi
+
 echo "[i] Done."
