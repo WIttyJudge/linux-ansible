@@ -1,8 +1,4 @@
 ---
-- name: asdasdas
-  debug:
-    msg: 'test'
-
 - name: Arch Linux specific tasks
   include_tasks: archlinux.yml
   when: ansible_os_family == "Archlinux"

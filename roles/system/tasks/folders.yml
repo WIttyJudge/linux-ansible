@@ -4,9 +4,6 @@
     path: "{{ item }}"
     state: directory
   loop:
-    # - "{{ ansible_user_dir }}/.local/bin"
-    # - "{{ ansible_user_dir }}/.local/share/applications"
-    # - "{{ ansible_user_dir }}/.local/share/icons/fontawesome"
     - "{{ ansible_user_dir }}/.cache/zsh"
     - "{{ ansible_user_dir }}/projects/golang/src"
     - "{{ ansible_user_dir }}/Pictures/screenshots"

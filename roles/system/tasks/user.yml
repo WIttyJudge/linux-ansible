@@ -34,7 +34,7 @@
   user:
     name: "{{ username }}"
     password: "{{ user_password | string | password_hash('sha512') }}"
-    groups: wheel,users,input,docker
+    groups: wheel,users,input,network,docker
     append: yes
     state: present
   become: yes
@@ -43,5 +43,5 @@
 - name: Rewrite default ansible facts with a newly created user
   set_fact:
     ansible_user_id: "{{ new_user.name }}"
-    ansible_user_dir: "/home/{{ new_user.home }}"
+    ansible_user_dir: "{{ new_user.home }}"
     XDG_DATA_HOME: "{{ ansible_user_dir }}/.local/share"

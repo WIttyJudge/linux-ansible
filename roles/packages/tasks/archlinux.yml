@@ -34,7 +34,7 @@
 
   - name: Install Network Manager
     pacman:
-      name: "networkmanager"
+      name: networkmanager
       state: present
     notify: 
       - Start networkmanager 

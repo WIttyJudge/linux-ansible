@@ -2,13 +2,13 @@
 # Inputs:
 # package_name: name of the package to download and build (i.e. yay-bin)
 
-- name: Check if package {{ package_name }} is already installed
+- name: Check if package '{{ package_name }}' is already installed
   shell: set -o pipefail || exit 1; pacman -Qsq |
     { grep '^'{{ package_name | quote }}'$' ; [ $? -lt 2 ]; }
   register: _package_installed
   changed_when: no
 
-- name: Make and install {{ package_name }}
+- name: Make and install '{{ package_name }}'
   when: _package_installed.stdout == ""
   block:
     - name: Create temporary build directory
@@ -21,6 +21,7 @@
         remote_src: yes
         src: "{{ makepkg_aur_url }}{{ package_name }}.tar.gz"
         dest: "{{ _tempdir.path }}"
+        state: directory
         
     - name: Run makepkg
       shell: cd '{{ _tempdir.path }}/{{ package_name }}' && makepkg -rsi --noconfirm
@@ -29,4 +30,3 @@
       file:
         path: "{{ _tempdir.path }}"
         state: absent
-
