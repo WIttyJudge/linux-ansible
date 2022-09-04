@@ -6,7 +6,7 @@
     update: no
   become: yes
 
-- name: Chmod local/bin folder
+- name: Chmod dotfiles/.local/bin folder
   file:
     path: "{{ dotfiles_git_dest }}/.local/bin"
     state: directory
@@ -16,9 +16,9 @@
     recurse: yes
   become: yes
 
-# - name: Run a setup script
-#   shell:
-#     cmd: bash setup --noconfirm
-#     chdir: "{{ dotfiles_git_dest }}"
-#   become: yes
-#   become_user: "{{ ansible_user_id }}"
+- name: Run a setup script
+  command: bash setup --noconfirm
+  args:
+    chdir: "{{ dotfiles_git_dest }}"
+  become: yes
+  become_user: "{{ ansible_user_id }}"
