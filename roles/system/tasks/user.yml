@@ -27,7 +27,7 @@
     validate: visudo -cf %s
   become: yes
 
-- name: Create {{ username }} user
+- name: Create '{{ username }}' user
   user:
     name: "{{ username }}"
     password: "{{ user_password | string | password_hash('sha512') }}"
