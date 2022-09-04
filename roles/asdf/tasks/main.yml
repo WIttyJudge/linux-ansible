@@ -2,6 +2,7 @@
   git:
     repo: "{{ asdf_git_src }}"
     dest: "{{ asdf_dir }}"
+  become: yes
 
 - name: Install asdf plugins
   shell: >-

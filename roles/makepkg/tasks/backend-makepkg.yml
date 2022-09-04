@@ -21,7 +21,6 @@
         remote_src: yes
         src: "{{ makepkg_aur_url }}{{ package_name }}.tar.gz"
         dest: "{{ _tempdir.path }}"
-        state: directory
         
     - name: Run makepkg
       shell: cd '{{ _tempdir.path }}/{{ package_name }}' && makepkg -rsi --noconfirm
