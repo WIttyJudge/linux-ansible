@@ -7,23 +7,20 @@
 
 - name: Get stats of the sudoers.pacnew
   stat:
-    path: ./test/sudoers.pacnew
+    path: /etc/sudoers.pacnew
   register: sudoers_pacnew_file
 
 - name: Copy sudoers.pacnew into sudoers
   copy:
-    src: ./test/sudoers.pacnew
-    # src: /etc/sudoers.pacnew
-    dest: ./test/sudoers
-    # dest: /etc/sudoers
+    src: /etc/sudoers.pacnew
+    dest: /etc/sudoers
     validate: visudo -cf %s
   become: yes
   when: sudoers_pacnew_file.stat.exists
 
 - name: Allow wheel group to have passwordless
   lineinfile:
-    path: ./test/sudoers
-    # path: /etc/sudoers
+    path: /etc/sudoers
     state: present
     regexp: "^%wheel"
     line: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL"

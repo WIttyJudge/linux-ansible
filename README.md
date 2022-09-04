@@ -1,5 +1,4 @@
 # linux-ansible
 
-Plan:
-
-1. Instal tmp automatically to the ~/.config/tmux/plugins/tmp folder.
+TODO:
+1. Refresh keys for non systemd init system. (openrc, runit)
