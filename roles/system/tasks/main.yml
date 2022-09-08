@@ -8,7 +8,3 @@
 - name: Arch Linux specific tasks
   include_tasks: archlinux.yml
   when: ansible_os_family == "Archlinux"
-
-- name: Specific tasks only for the notebook device.
-  include_tasks: notebook.yml
-  when: ansible_form_factor == "Notebook"
