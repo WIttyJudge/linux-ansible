@@ -24,7 +24,6 @@
 
 - name: Add pacman hooks
   copy:
-    mode: 0644
     src: paccache.hook
     dest: /etc/pacman.d/hooks/
   become: yes
