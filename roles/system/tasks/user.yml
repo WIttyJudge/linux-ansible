@@ -31,7 +31,11 @@
   user:
     name: "{{ username }}"
     password: "{{ user_password | string | password_hash('sha512') }}"
-    groups: wheel,users,input,network,docker
+    groups: 
+      - wheel 
+      - users 
+      - input 
+      - network
     append: yes
     state: present
   become: yes
