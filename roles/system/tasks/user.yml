@@ -1,10 +1,4 @@
 ---
-- name: Make sure we have a 'wheel' group
-  group:
-    name: wheel
-    state: present
-  become: yes
-
 - name: Get stats of the sudoers.pacnew
   stat:
     path: /etc/sudoers.pacnew
@@ -18,7 +12,16 @@
   become: yes
   when: sudoers_pacnew_file.stat.exists
 
-- name: Allow wheel group to have passwordless
+- name: Make sure we have a 'wheel,docker' groups
+  group:
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - wheel
+    - docker
+  become: yes
+
+- name: Allow 'wheel' group to have passwordless
   lineinfile:
     path: /etc/sudoers
     state: present
@@ -27,22 +30,25 @@
     validate: visudo -cf %s
   become: yes
 
-- name: Create '{{ username }}' user
-  user:
-    name: "{{ username }}"
-    password: "{{ user_password | string | password_hash('sha512') }}"
-    groups: 
-      - wheel 
-      - users 
-      - input 
-      - network
-    append: yes
-    state: present
-  become: yes
-  register: new_user
+- name: New user
+  when: create_new_user != False | default(False)
+  block:
+    - name: Create '{{ username }}' user
+      user:
+        name: "{{ username }}"
+        password: "{{ user_password | string | password_hash('sha512') }}"
+        groups: 
+          - wheel 
+          - users 
+          - input 
+          - network
+          - docker
+        append: yes
+        state: present
+      become: yes
+      register: new_user
 
-- name: Rewrite default ansible facts with a newly created user
-  set_fact:
-    ansible_user_id: "{{ new_user.name }}"
-    ansible_user_dir: "{{ new_user.home }}"
-    XDG_DATA_HOME: "{{ ansible_user_dir }}/.local/share"
+    - name: Rewrite default ansible facts with a newly created user
+      set_fact:
+        ansible_user_id: "{{ new_user.name }}"
+        ansible_user_dir: "{{ new_user.home }}"

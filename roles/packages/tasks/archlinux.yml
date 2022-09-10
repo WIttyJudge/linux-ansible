@@ -3,7 +3,7 @@
   - name: Update/Upgrade pacman (pacman -Syu)
     pacman:
       update_cache: yes
-      # upgrade: yes
+      upgrade: yes
 
   - name: Refresh Arch keyrings.
     pacman:
