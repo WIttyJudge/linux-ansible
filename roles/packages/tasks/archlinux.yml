@@ -57,9 +57,10 @@
 
   - name: Install pacman packages
     pacman:
-      name: "{{ pacman_packages }}"
+      name: "{{ item }}"
       state: present
     ignore_errors: yes
+    loop: "{{ pacman_packages }}"
 
   - name: Install AUR packages
     import_role:
