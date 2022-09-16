@@ -68,7 +68,6 @@
     vars:
       # Add yay-bin to the aur packages list
       makepkg_packages: "{{ ['yay-bin'] + aur_packages }}"
-    become: no
 
   become: yes
   tags: archlinux_packages

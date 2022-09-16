@@ -4,3 +4,7 @@
   loop: "{{ makepkg_packages }}"
   loop_control:
     loop_var: package_name
+  args:
+    apply:
+      become: yes
+      become_user: "{{ ansible_user_id }}"
