@@ -93,7 +93,7 @@ Linux)
       echo "[i] Install Ansible"
 
       sudo pacman -S --noconfirm ansible
-      ansible-galaxy install -r requirements.yaml
+      ansible-galaxy install -r requirements.yml
     fi
     ;;
   *)
