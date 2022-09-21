@@ -27,7 +27,7 @@ welcome_message() {
 
 create_new_user() {
   echo
-  echo "Would you like to create a new user or use an nexisting one?"
+  echo "Would you like to create a new user or use an existing one?"
   read -p "Create a new user? [y/N]: " new_user
   while ! [[ "$new_user" =~ ^[yYnN]*$ ]]; do
     echo "[!] '$new_user' invalid selection"
