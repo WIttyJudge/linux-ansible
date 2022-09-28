@@ -5,6 +5,7 @@
     dest: "{{ suckless_tools_git_dest }}"
     update: no
   become: yes
+  become_user: "{{ ansible_user_id }}"
 
 - name: Build and install suckless tools
   make:

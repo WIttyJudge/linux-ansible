@@ -5,6 +5,7 @@
     dest: "{{ dotfiles_git_dest }}"
     update: no
   become: yes
+  become_user: "{{ ansible_user_id }}"
 
 - name: Chmod dotfiles/.local/bin folder
   file:
