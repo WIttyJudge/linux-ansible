@@ -23,3 +23,11 @@
     chdir: "{{ dotfiles_git_dest }}"
   become: yes
   become_user: "{{ ansible_user_id }}"
+
+- name: Clone tmux plugin manager repository
+  git:
+    repo: "{{ tmux_plugin_manager_src }}"
+    dest: "{{ tmux_plugin_manager_dest }}"
+    update: no
+  become: yes
+  become_user: "{{ ansible_user_id }}"
