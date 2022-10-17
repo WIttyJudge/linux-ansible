@@ -18,7 +18,7 @@
   become: yes
 
 - name: Run a setup script
-  command: bash setup --noconfirm
+  command: bash setup
   args:
     chdir: "{{ dotfiles_git_dest }}"
   become: yes
