@@ -1,8 +1,10 @@
+---
 - name: Git clone asdf
   git:
     repo: "{{ asdf_git_src }}"
     dest: "{{ asdf_dir }}"
   become: yes
+  become_user: "{{ ansible_user_id }}"
 
 - name: Install asdf plugins
   shell: >-
