@@ -16,7 +16,7 @@
   group:
     name: "{{ item }}"
     state: present
-  with_items: 
+  with_items:
     - wheel
     - docker
   become: yes
@@ -31,16 +31,16 @@
   become: yes
 
 - name: New user
-  when: create_new_user != False | default(False)
+  when: not create_new_user | default(False)
   block:
     - name: Create '{{ username }}' user
       user:
         name: "{{ username }}"
         password: "{{ user_password | string | password_hash('sha512') }}"
-        groups: 
-          - wheel 
-          - users 
-          - input 
+        groups:
+          - wheel
+          - users
+          - input
           - network
           - docker
         append: yes

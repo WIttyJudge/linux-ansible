@@ -19,16 +19,16 @@
   - name: Execute reflector package
     shell: reflector --country 'Ukraine,Romania,Russia,Germany' --save /etc/pacman.d/mirrorlist
 
-  - name: Remove reflector packages 
+  - name: Remove reflector packages
     pacman:
       name: reflector
       state: absent
 
   - name: Install first needed packages
     pacman:
-      name: 
-        - curl 
-        - git 
+      name:
+        - curl
+        - git
         - base-devel
       state: present
 
@@ -36,8 +36,8 @@
     pacman:
       name: networkmanager
       state: present
-    notify: 
-      - Start networkmanager 
+    notify:
+      - Start networkmanager
 
   - name: Install packages.csv file
     get_url:
