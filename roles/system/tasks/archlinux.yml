@@ -7,9 +7,9 @@
     backrefs: "{{ item.backrefs }}"
     state: present
   loop:
-    - { line: "Color", regexp: "^#?Color$", backrefs: yes }
-    - { line: "ILoveCandy", regexp: "^#?ILoveCandy$", backrefs: yes }
-    - { line: "ParallelDownloads = 5", regexp: "#ParallelDownloads", backrefs: yes }
+    - { line: "Color", regexp: "^#?Color$", backrefs: true }
+    - { line: "ILoveCandy", regexp: "^#?ILoveCandy$", backrefs: true }
+    - { line: "ParallelDownloads = 5", regexp: "#ParallelDownloads", backrefs: true }
 
 - name: Enable pacman repositories
   ini_file:
@@ -20,20 +20,20 @@
     state: present
   loop:
     - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
-  become: yes
+  become: true
 
 - name: Add pacman hooks
   copy:
     src: pacman.d/hooks/
     dest: /etc/pacman.d/hooks/
-  become: yes
+  become: true
 
 - name: Disable beep sound
   shell: |
     rmmod pcspkr
     echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
-  become: yes
-  ignore_errors: yes
+  become: true
+  ignore_errors: true
 
 - name: Specific tasks only for the notebook device.
   include_tasks: notebook.yml

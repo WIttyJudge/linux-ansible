@@ -3,8 +3,8 @@
   git:
     repo: "{{ suckless_tools_git_src }}"
     dest: "{{ suckless_tools_git_dest }}"
-    update: no
-  become: yes
+    update: false
+  become: true
   become_user: "{{ ansible_user_id }}"
 
 - name: Build and install suckless tools
@@ -16,4 +16,4 @@
     - dwm
     - dwmblocks
     - slock
-  become: yes
+  become: true

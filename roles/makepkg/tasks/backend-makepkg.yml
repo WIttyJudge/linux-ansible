@@ -6,7 +6,7 @@
   shell: set -o pipefail || exit 1; pacman -Qsq |
     { grep '^'{{ package_name | quote }}'$' ; [ $? -lt 2 ]; }
   register: _package_installed
-  changed_when: no
+  changed_when: false
 
 - name: Make and install '{{ package_name }}'
   when: _package_installed.stdout == ""
@@ -18,7 +18,7 @@
 
     - name: Download package from the AUR
       unarchive:
-        remote_src: yes
+        remote_src: true
         src: "{{ makepkg_aur_url }}{{ package_name }}.tar.gz"
         dest: "{{ _tempdir.path }}"
 

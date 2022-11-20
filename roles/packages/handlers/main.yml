@@ -2,6 +2,6 @@
 - name: Start networkmanager
   service:
     name: NetworkManager.service
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true

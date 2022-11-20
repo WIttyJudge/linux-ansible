@@ -3,8 +3,8 @@
   git:
     repo: "{{ dotfiles_git_src }}"
     dest: "{{ dotfiles_git_dest }}"
-    update: no
-  become: yes
+    update: false
+  become: true
   become_user: "{{ ansible_user_id }}"
 
 - name: Chmod dotfiles/.local/bin folder
@@ -14,20 +14,20 @@
     mode: 0755
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
-    recurse: yes
-  become: yes
+    recurse: true
+  become: true
 
 - name: Run a setup script
   command: bash setup
   args:
     chdir: "{{ dotfiles_git_dest }}"
-  become: yes
+  become: true
   become_user: "{{ ansible_user_id }}"
 
 - name: Clone tmux plugin manager repository
   git:
     repo: "{{ tmux_plugin_manager_src }}"
     dest: "{{ tmux_plugin_manager_dest }}"
-    update: no
-  become: yes
+    update: false
+  become: true
   become_user: "{{ ansible_user_id }}"

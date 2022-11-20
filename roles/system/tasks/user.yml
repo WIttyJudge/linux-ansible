@@ -9,7 +9,7 @@
     src: /etc/sudoers.pacnew
     dest: /etc/sudoers
     validate: visudo -cf %s
-  become: yes
+  become: true
   when: sudoers_pacnew_file.stat.exists
 
 - name: Make sure we have a 'wheel,docker' groups
@@ -19,7 +19,7 @@
   with_items:
     - wheel
     - docker
-  become: yes
+  become: true
 
 - name: Allow 'wheel' group to have passwordless
   lineinfile:
@@ -28,10 +28,11 @@
     regexp: "^%wheel"
     line: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL"
     validate: visudo -cf %s
-  become: yes
+  become: true
 
-- name: New user
-  when: not create_new_user | default(False)
+- name: Create new user
+  # when: not create_new_user | default(False)
+  when: create_new_user | default(False)
   block:
     - name: Create '{{ username }}' user
       user:
@@ -43,9 +44,9 @@
           - input
           - network
           - docker
-        append: yes
+        append: true
         state: present
-      become: yes
+      become: true
       register: new_user
 
     - name: Rewrite default ansible facts with a newly created user

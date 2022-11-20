@@ -2,8 +2,8 @@
 - block:
   - name: Update/Upgrade pacman (pacman -Syu)
     pacman:
-      update_cache: yes
-      upgrade: yes
+      update_cache: true
+      upgrade: true
 
   - name: Refresh Arch keyrings.
     pacman:
@@ -43,7 +43,7 @@
     get_url:
       url: "{{ packages_csv_src }}"
       dest: "{{ packages_csv_dest }}"
-      force: yes
+      force: true
 
   - name: Read packages.csv file
     read_csv:
@@ -59,7 +59,7 @@
     pacman:
       name: "{{ item }}"
       state: present
-    ignore_errors: yes
+    ignore_errors: true
     loop: "{{ pacman_packages }}"
 
   - name: Install AUR packages
@@ -69,5 +69,5 @@
       # Add yay-bin to the aur packages list
       makepkg_packages: "{{ ['yay-bin'] + aur_packages }}"
 
-  become: yes
+  become: true
   tags: archlinux_packages
