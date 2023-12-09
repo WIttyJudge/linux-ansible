@@ -83,18 +83,16 @@ sudo -v
 case "$(uname -s)" in
 Linux)
   [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
-  [ ! -x "$(command -v ansible)" ] && ansible_not_installed=true
 
   . /etc/os-release
 
   case "$ID" in
   arch)
-    if [ $ansible_not_installed ]; then
-      echo "[i] Install Ansible"
+    echo "[i] Install Ansible"
 
-      sudo pacman -S --noconfirm ansible
-      ansible-galaxy install -r requirements.yml
-    fi
+
+    sudo pacman -S --needed --noconfirm ansible
+    ansible-galaxy install -r requirements.yml
     ;;
   *)
     echo "[!] Unsupported Linux Distribution: $ID"
@@ -138,7 +136,7 @@ done
 
 if [[ "$launch_playbook" =~ ^[yY]$ ]]; then
   echo "[i] Run Playbook"
-  ansible-playbook bootstrap.yml --ask-become-pass --tags $tags
+  # ansible-playbook bootstrap.yml --ask-become-pass --tags $tags
 fi
 
 echo "[i] Done."
