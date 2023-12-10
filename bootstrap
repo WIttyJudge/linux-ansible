@@ -17,6 +17,29 @@ if [ -z $tags ]; then
   tags="all"
 fi
 
+install_packages() {
+  case "$(uname -s)" in
+  Linux)
+    [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
+
+    . /etc/os-release
+
+    case "$ID" in
+    arch)
+      echo "[i] Install Ansible"
+
+      sudo pacman -S --needed --noconfirm ansible
+      ansible-galaxy install -r requirements.yml
+      ;;
+    *)
+      echo "[!] Unsupported Linux Distribution: $ID"
+      exit 1
+      ;;
+    esac
+    ;;
+  esac
+}
+
 welcome_message() {
   echo "Welcome to ansible setup"
   echo
@@ -80,27 +103,7 @@ get_user_password() {
 echo "[i] Ask for sudo password"
 sudo -v
 
-case "$(uname -s)" in
-Linux)
-  [ ! -f /etc/os-release ] && echo '[!] Unsupported Linux Distribution' && exit 1
-
-  . /etc/os-release
-
-  case "$ID" in
-  arch)
-    echo "[i] Install Ansible"
-
-
-    sudo pacman -S --needed --noconfirm ansible
-    ansible-galaxy install -r requirements.yml
-    ;;
-  *)
-    echo "[!] Unsupported Linux Distribution: $ID"
-    exit 1
-    ;;
-  esac
-  ;;
-esac
+install_packages
 
 touch $custom_file_path
 
@@ -136,7 +139,7 @@ done
 
 if [[ "$launch_playbook" =~ ^[yY]$ ]]; then
   echo "[i] Run Playbook"
-  # ansible-playbook bootstrap.yml --ask-become-pass --tags $tags
+  ansible-playbook bootstrap.yml --ask-become-pass --tags $tags
 fi
 
 echo "[i] Done."

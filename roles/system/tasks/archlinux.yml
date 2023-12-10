@@ -22,12 +22,6 @@
     - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
   become: true
 
-- name: Add pacman hooks
-  copy:
-    src: pacman.d/hooks/
-    dest: /etc/pacman.d/hooks/
-  become: true
-
 - name: Disable beep sound
   shell: |
     rmmod pcspkr
