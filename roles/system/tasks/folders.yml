@@ -1,5 +1,5 @@
 ---
-- name: Create folders
+- name: Create directories
   file:
     path: "{{ item }}"
     state: directory

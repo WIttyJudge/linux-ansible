@@ -31,25 +31,23 @@
   become: true
 
 - name: Create new user
-  # when: not create_new_user | default(False)
+  user:
+    name: "{{ username }}"
+    password: "{{ user_password | password_hash('sha512') }}"
+    groups:
+      - wheel
+      - users
+      - input
+      - network
+      - docker
+    append: true
+    state: present
+  become: true
+  register: new_user
   when: create_new_user | default(False)
-  block:
-    - name: Create '{{ username }}' user
-      user:
-        name: "{{ username }}"
-        password: "{{ user_password | string | password_hash('sha512') }}"
-        groups:
-          - wheel
-          - users
-          - input
-          - network
-          - docker
-        append: true
-        state: present
-      become: true
-      register: new_user
 
-    - name: Rewrite default ansible facts with a newly created user
-      set_fact:
-        ansible_user_id: "{{ new_user.name }}"
-        ansible_user_dir: "{{ new_user.home }}"
+- name: Rewrite default ansible facts with a newly created user
+  set_fact:
+    ansible_user_id: "{{ new_user.name }}"
+    ansible_user_dir: "{{ new_user.home }}"
+  when: new_user.name is defined

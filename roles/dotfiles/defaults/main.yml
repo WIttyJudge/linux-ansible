@@ -1,5 +1,8 @@
 ---
-dotfiles_git_src: https://github.com/wittyjudge/dotfiles.git
-dotfiles_git_dest: "{{ ansible_user_dir }}/dotfiles"
-tmux_plugin_manager_src: "https://github.com/tmux-plugins/tpm"
-tmux_plugin_manager_dest: "{{ ansible_user_dir }}/.config/tmux/plugins/tmp"
+dotfiles:
+  repo: https://github.com/wittyjudge/dotfiles.git
+  dest: "{{ ansible_user_dir }}/dotfiles"
+
+tmux_plugin_manager: 
+  repo: "https://github.com/tmux-plugins/tpm"
+  dest: "{{ ansible_user_dir }}/.config/tmux/plugins/tmp"

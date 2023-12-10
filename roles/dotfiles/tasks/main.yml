@@ -1,8 +1,8 @@
 ---
 - name: Clone dotfiles repository
   git:
-    repo: "{{ dotfiles_git_src }}"
-    dest: "{{ dotfiles_git_dest }}"
+    repo: "{{ dotfiles.repo }}"
+    dest: "{{ dotfiles.dest }}"
     update: false
   become: true
   become_user: "{{ ansible_user_id }}"
@@ -26,8 +26,8 @@
 
 - name: Clone tmux plugin manager repository
   git:
-    repo: "{{ tmux_plugin_manager_src }}"
-    dest: "{{ tmux_plugin_manager_dest }}"
+    repo: "{{ tmux_plugin_manager.repo }}"
+    dest: "{{ tmux_plugin_manager.dest }}"
     update: false
   become: true
   become_user: "{{ ansible_user_id }}"
