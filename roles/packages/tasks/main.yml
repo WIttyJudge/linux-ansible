@@ -1,4 +1,4 @@
 ---
 - name: Arch Linux specific tasks
-  include_tasks: archlinux.yml
+  ansible.builtin.include_tasks: archlinux.yml
   when: ansible_os_family == "Archlinux"

@@ -1,7 +1,14 @@
 ---
-- name: Start networkmanager
-  service:
+- name: Start NetworkManager service
+  ansible.builtin.service:
     name: NetworkManager.service
+    enabled: true
+    state: started
+  become: true
+
+- name: Start reflector service
+  ansible.builtin.service:
+    name: reflector.timer
     enabled: true
     state: started
   become: true
