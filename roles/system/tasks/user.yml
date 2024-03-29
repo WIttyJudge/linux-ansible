@@ -1,11 +1,11 @@
 ---
 - name: Get stats of the sudoers.pacnew
-  stat:
+  ansible.builtin.stat:
     path: /etc/sudoers.pacnew
   register: sudoers_pacnew_file
 
 - name: Copy sudoers.pacnew into sudoers
-  copy:
+  ansible.builtin.copy:
     src: /etc/sudoers.pacnew
     dest: /etc/sudoers
     validate: visudo -cf %s
@@ -13,7 +13,7 @@
   when: sudoers_pacnew_file.stat.exists
 
 - name: Make sure we have a 'wheel,docker' groups
-  group:
+  ansible.builtin.group:
     name: "{{ item }}"
     state: present
   with_items:
@@ -22,16 +22,16 @@
   become: true
 
 - name: Allow 'wheel' group to have passwordless
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     state: present
-    regexp: "^%wheel"
+    regexp: ^%wheel
     line: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL"
     validate: visudo -cf %s
   become: true
 
 - name: Create new user
-  user:
+  ansible.builtin.user:
     name: "{{ username }}"
     password: "{{ user_password | password_hash('sha512') }}"
     groups:
@@ -47,7 +47,7 @@
   when: create_new_user | default(False)
 
 - name: Rewrite default ansible facts with a newly created user
-  set_fact:
+  ansible.builtin.set_fact:
     ansible_user_id: "{{ new_user.name }}"
     ansible_user_dir: "{{ new_user.home }}"
   when: new_user.name is defined

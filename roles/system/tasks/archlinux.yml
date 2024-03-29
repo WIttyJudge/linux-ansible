@@ -1,34 +1,30 @@
 ---
 - name: Configure pacman
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/pacman.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     backrefs: "{{ item.backrefs }}"
     state: present
   loop:
-    - { line: "Color", regexp: "^#?Color$", backrefs: true }
-    - { line: "ILoveCandy", regexp: "^#?ILoveCandy$", backrefs: true }
-    - { line: "ParallelDownloads = 5", regexp: "#ParallelDownloads", backrefs: true }
+    - { line: Color, regexp: "^#?Color$", backrefs: true }
+    - { line: ILoveCandy, regexp: "^#?ILoveCandy$", backrefs: true }
+    - { line: ParallelDownloads = 5, regexp: "#ParallelDownloads", backrefs: true }
 
 - name: Enable pacman repositories
-  ini_file:
+  community.general.ini_file:
     path: /etc/pacman.conf
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value | default(omit) }}"
     state: present
   loop:
-    - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
+    - { section: multilib, option: Include, value: /etc/pacman.d/mirrorlist }
   become: true
 
 - name: Disable beep sound
-  shell: |
+  ansible.builtin.shell: |
     rmmod pcspkr
     echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
   become: true
   ignore_errors: true
-
-- name: Specific tasks only for the notebook device.
-  include_tasks: notebook.yml
-  when: ansible_form_factor == "Notebook"

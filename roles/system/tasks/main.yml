@@ -1,10 +1,17 @@
 ---
 - name: Setup user related settings
-  include_tasks: user.yml
+  ansible.builtin.include_tasks: user.yml
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ ansible_user_dir }}/projects/golang/src"
+    - "{{ ansible_user_dir }}/Pictures/screenshots"
+  become: true
+  become_user: "{{ ansible_user_id }}"
 
-# - name: Create directories
-#   include_tasks: folders.yml
-#
 # - name: Arch Linux specific tasks
 #   include_tasks: archlinux.yml
 #   when: ansible_os_family == "Archlinux"
